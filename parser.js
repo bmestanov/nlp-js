@@ -5,8 +5,8 @@ const sentenceTemplates = require('./templates');
 
 /**
  * Parses a given string
- * @param {String} input - input string
- * @returns {Array} res - array of matching cases
+ * @param {String} input input string
+ * @returns {Array} array of matching cases
  */
 exports.parse = ({ sentence }) => {
   const tokens = nlp(sentence, lexicon);
