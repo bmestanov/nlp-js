@@ -1,14 +1,15 @@
 const _ = require('lodash');
 const nlp = require('compromise');
+const readline = require('readline');
 const { lexicon } = require('./enums');
 const sentenceTemplates = require('./templates');
 
 /**
  * Parses a given string
- * @param {String} input input string
- * @returns {Array} array of matching cases
+ * @param {{sentence: string}} input input string
+ * @returns {any[]} array of matching cases
  */
-exports.parse = ({ sentence }) => {
+const parse = ({ sentence }) => {
   const tokens = nlp(sentence, lexicon);
   return _(sentenceTemplates)
     .map((template) => {
@@ -20,7 +21,30 @@ exports.parse = ({ sentence }) => {
     .map(({ template, match }) => ({
       statement: template.statement,
       sentenceTemplate: template.text,
-      parameters: template.getParams(match),
+      parameters: template.getParams(match, sentence),
     }))
     .value();
+};
+
+if (process.argv.includes('-i')) {
+  // interactive mode on
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  const ask = () => rl.question('Input sentence (or \'exit\')\n> ',
+    (answer) => {
+      if (answer === 'exit') {
+        rl.close();
+      } else {
+        // eslint-disable-next-line no-console
+        console.log('Output:\n', parse({ sentence: answer }));
+        ask();
+      }
+    });
+  ask();
+}
+
+module.exports = {
+  parse,
 };
