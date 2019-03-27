@@ -131,7 +131,7 @@ describe('simple cases', () => {
     }]);
   });
 
-  it.only('should ignore letter casing', () => {
+  it('should ignore letter casing', () => {
     check('Part number IS LESS THAN 10', [{
       statement: enums.statements.lt,
       parameters: ['part number', 10],

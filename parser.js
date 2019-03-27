@@ -10,7 +10,7 @@ const sentenceTemplates = require('./templates');
  * @returns {any[]} array of matching cases
  */
 const parse = ({ sentence }) => {
-  const tokens = nlp(sentence, lexicon);
+  const tokens = nlp(sentence, lexicon).normalize();
   return _(sentenceTemplates)
     .map((template) => {
       const { matcher } = template;
