@@ -122,4 +122,20 @@ describe('simple cases', () => {
       sentenceTemplate: sentenceTemplates.neq.text,
     }]);
   });
+
+  it('should ignore punctuation', () => {
+    check('part number, is-less-than 10.', [{
+      statement: enums.statements.lt,
+      parameters: ['part number', 10],
+      sentenceTemplate: sentenceTemplates.lt.text,
+    }]);
+  });
+
+  it.only('should ignore letter casing', () => {
+    check('Part number IS LESS THAN 10', [{
+      statement: enums.statements.lt,
+      parameters: ['part number', 10],
+      sentenceTemplate: sentenceTemplates.lt.text,
+    }]);
+  });
 });

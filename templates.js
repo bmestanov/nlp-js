@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const nlp = require('compromise');
 const { enums, lexicon } = require('./enums');
 
 /**
@@ -14,22 +15,22 @@ const getValueParams = (match, sentence) => {
   const valueFilter = match.terms().if('#Value');
   const raw = valueFilter.data();
   const parsed = valueFilter.values().data();
+  const normalized = nlp(sentence).normalize().out();
 
   const values = _.zip(raw, parsed)
     .map(([{ text }, { number }]) => ({
       entry: number,
-      index: sentence.indexOf(text),
+      index: normalized.indexOf(text),
     }));
 
-  const params = _(lexicon)
+  return _(lexicon)
     .keys()
-    .map(entry => ({ entry, index: sentence.indexOf(entry) }))
+    .map(entry => ({ entry, index: normalized.indexOf(entry) }))
     .filter(({ index }) => index >= 0)
     .tap(entries => entries.push(...values))
     .sortBy('index')
     .map('entry')
     .value();
-  return params;
 };
 
 module.exports = {
