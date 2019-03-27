@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { describe, it } = require('mocha');
 const { expect } = require('chai');
 const { parse } = require('../parser');
@@ -136,6 +137,78 @@ describe('simple cases', () => {
       statement: enums.statements.lt,
       parameters: ['part number', 10],
       sentenceTemplate: sentenceTemplates.lt.text,
+    }]);
+  });
+
+  it('property is after date', () => {
+    check('order date is after 3rd December, 2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-12-03').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('date is after property', () => {
+    check('3rd December, 2019 is after order date', [{
+      statement: enums.statements.after,
+      parameters: [moment('2019-12-03').toString(), 'order date'],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('property is after time', () => {
+    check('order date is after 11AM 3rd December 2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-12-03T11:00').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('property is after spelled date', () => {
+    check('order date is after third of December 2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-12-03').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('property is after short time', () => {
+    check('order date is after 03 Dec 19', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-12-03').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('property is after US dates with slash', () => {
+    check('order date is after 12/03/2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-12-03').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('property is after US dates with dots', () => {
+    check('order date is after 12.03.2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-12-03').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('property is after month', () => {
+    check('order date is after December 2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-12-01').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }]);
+  });
+
+  it('property is before time', () => {
+    check('order date is before 11:24AM Dec 03 2019', [{
+      statement: enums.statements.before,
+      parameters: ['order date', moment('2019-12-03T11:24').toString()],
+      sentenceTemplate: sentenceTemplates.before.text,
     }]);
   });
 });

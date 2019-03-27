@@ -13,7 +13,7 @@ const enums = {
   objects: [
     {
       object: 'purchase order',
-      properties: ['part number', 'quantity', 'unit price'],
+      properties: ['part number', 'quantity', 'unit price', 'order date'],
     },
   ],
 };
