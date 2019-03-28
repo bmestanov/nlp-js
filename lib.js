@@ -2,7 +2,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const chrono = require('chrono-node');
 const nlp = require('compromise');
-const { lexicon } = require('./enums');
+const { enums, lexicon } = require('./enums');
 
 const refiner = new chrono.Refiner();
 refiner.refine = (text, results) => {
@@ -18,8 +18,7 @@ refiner.refine = (text, results) => {
   return results;
 };
 
-const dateParser = new chrono.Chrono();
-dateParser.refiners.push(refiner);
+enums.locales.forEach(locale => chrono[locale].refiners.push(refiner));
 
 /**
  * Finds properties from the lexicon and inserts already found values,
@@ -61,11 +60,13 @@ const getNumberParams = (match, sentence) => {
  * Finds date values
  * @param {Text} match compromise match result
  * @param {string} sentence original sentence to be matched
+ * @param {string} locale locale for date matching
  * @returns {[{index: number, entry: string}]}
  */
-const getDateParams = (match, sentence) => {
+const getDateParams = (match, sentence, locale) => {
   const normalized = nlp(sentence).normalize().out();
-  const values = dateParser.parse(normalized)
+  const localizedParser = chrono[locale];
+  const values = localizedParser.parse(normalized)
     .map(({ index, start }) => ({
       entry: moment(start.date()).toString(),
       index,

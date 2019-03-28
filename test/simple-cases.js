@@ -10,9 +10,10 @@ describe('simple cases', () => {
    * Helper function
    * @param {string} sentence sentence to be tested
    * @param {[any]} output desired output
+   * @param {{string: any}} parseArgs arguments forwarded to parser
    */
-  const check = (sentence, output) => {
-    const result = parse({ sentence });
+  const check = (sentence, output, parseArgs) => {
+    const result = parse({ sentence, ...parseArgs });
     expect(result).to.deep.equal(output);
   };
 
@@ -173,7 +174,7 @@ describe('simple cases', () => {
   });
 
   it('property is after short time', () => {
-    check('order date is after 03 Dec 19', [{
+    check('order date is after 3 Dec 2019', [{
       statement: enums.statements.after,
       parameters: ['order date', moment('2019-12-03').toString()],
       sentenceTemplate: sentenceTemplates.after.text,
@@ -194,6 +195,22 @@ describe('simple cases', () => {
       parameters: ['order date', moment('2019-12-03').toString()],
       sentenceTemplate: sentenceTemplates.after.text,
     }]);
+  });
+
+  it('property is after UK date with slash', () => {
+    check('order date is after 12/03/2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-03-12').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }], { locale: 'en_GB' });
+  });
+
+  it('property is after german date with dots', () => {
+    check('order date is after 12.03.2019', [{
+      statement: enums.statements.after,
+      parameters: ['order date', moment('2019-03-12').toString()],
+      sentenceTemplate: sentenceTemplates.after.text,
+    }], { locale: 'de' });
   });
 
   it('property is after month', () => {

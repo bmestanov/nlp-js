@@ -6,10 +6,11 @@ const sentenceTemplates = require('./templates');
 
 /**
  * Parses a given string
- * @param {{sentence: string}} input input string
+ * @typedef {'en' | 'en_GB' | 'de' | 'fr' | 'es' | 'ja'} Locale
+ * @param {{sentence: string, locale: Locale }} input input string
  * @returns {any[]} array of matching cases
  */
-const parse = ({ sentence }) => {
+const parse = ({ sentence, locale = 'en' }) => {
   const tokens = nlp(sentence, lexicon).normalize();
   return _(sentenceTemplates)
     .map((template) => {
@@ -21,7 +22,7 @@ const parse = ({ sentence }) => {
     .map(({ template, match }) => ({
       statement: template.statement,
       sentenceTemplate: template.text,
-      parameters: template.getParams(match, sentence),
+      parameters: template.getParams(match, sentence, locale),
     }))
     .value();
 };

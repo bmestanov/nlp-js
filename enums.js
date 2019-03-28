@@ -10,6 +10,7 @@ const enums = {
     before: 'before',
     after: 'after',
   },
+  locales: ['en', 'en_GB', 'de', 'fr', 'es', 'ja'], // available locales for date parsing
   objects: [
     {
       object: 'purchase order',
