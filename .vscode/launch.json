@@ -7,8 +7,12 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/parser.js"
+            "name": "Current file",
+            "program": "${file}",
+            "args": [
+                "-i"
+            ]
+            // "console": "integratedTerminal"
         },
         {
             "type": "node",
@@ -21,7 +25,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/test"
+                "${workspaceFolder}/test",
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }

@@ -1,8 +1,6 @@
 const _ = require('lodash');
-const nlp = require('compromise');
-const readline = require('readline');
-const { lexicon } = require('./enums');
 const sentenceTemplates = require('./templates');
+const { SentenceScorer } = require('./sentence-scorer');
 
 /**
  * Parses a given string
@@ -10,41 +8,22 @@ const sentenceTemplates = require('./templates');
  * @param {{sentence: string, locale: Locale }} input input string
  * @returns {any[]} array of matching cases
  */
-const parse = ({ sentence, locale = 'en' }) => {
-  const tokens = nlp(sentence, lexicon).normalize();
-  return _(sentenceTemplates)
-    .map((template) => {
-      const { matcher } = template;
-      const match = tokens.match(matcher);
-      return { template, match };
-    })
-    .filter('match.found')
-    .map(({ template, match }) => ({
-      statement: template.statement,
-      sentenceTemplate: template.text,
-      parameters: template.getParams(match, sentence, locale),
+const parse = async ({ sentence, locale = 'en' }) => SentenceScorer
+  .getInstance()
+  .then(({ score }) => score(sentence))
+  .then(matches => _(matches)
+    .map(({ label, score }) => ({
+      statement: sentenceTemplates[label].statement,
+      sentenceTemplate: sentenceTemplates[label].text,
+      parameters: sentenceTemplates[label].getParams(sentence, locale),
+      score,
     }))
-    .value();
-};
-
-if (process.argv.includes('-i')) {
-  // interactive mode on
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+    .value())
+  .catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    return [];
   });
-  const ask = () => rl.question('Input sentence (or \'exit\')\n> ',
-    (answer) => {
-      if (answer === 'exit') {
-        rl.close();
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('Output:\n', parse({ sentence: answer }));
-        ask();
-      }
-    });
-  ask();
-}
 
 module.exports = {
   parse,

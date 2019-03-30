@@ -41,19 +41,20 @@ const withProperties = (sentence, values) => _(lexicon)
  * @param {string} sentence original sentence to be matched
  * @returns {[{index: number, entry: number}]}
  */
-const getNumberParams = (match, sentence) => {
-  const valueFilter = match.terms().if('#Value');
+const getNumberParams = (sentence) => {
+  const normalized = nlp(sentence).normalize();
+  const normalizedSentence = normalized.out();
+  const valueFilter = normalized.terms().if('#Value');
   const raw = valueFilter.data();
   const parsed = valueFilter.values().data();
-  const normalized = nlp(sentence).normalize().out();
 
   const values = _.zip(raw, parsed)
     .map(([{ text }, { number }]) => ({
       entry: number,
-      index: normalized.indexOf(text),
+      index: normalizedSentence.indexOf(text),
     }));
 
-  return withProperties(normalized, values);
+  return withProperties(normalizedSentence, values);
 };
 
 /**
@@ -63,7 +64,7 @@ const getNumberParams = (match, sentence) => {
  * @param {string} locale locale for date matching
  * @returns {[{index: number, entry: string}]}
  */
-const getDateParams = (match, sentence, locale) => {
+const getDateParams = (sentence, locale) => {
   const normalized = nlp(sentence).normalize().out();
   const localizedParser = chrono[locale];
   const values = localizedParser.parse(normalized)
