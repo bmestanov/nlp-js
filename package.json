@@ -1,7 +1,6 @@
 {
   "scripts": {
     "test": "./node_modules/.bin/mocha ./test --timeout 5000 && exit 0",
-    "start": "node parser.js -i",
     "word2vec": "node word2vec.js"
   },
   "dependencies": {
