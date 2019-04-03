@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "./node_modules/.bin/mocha ./test --timeout 5000 && exit 0",
+    "test": "./node_modules/.bin/mocha ./test --timeout 999999 --exit",
     "word2vec": "node word2vec.js"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
     "mocha": "^6.0.2",
     "moment": "^2.24.0",
     "pre-commit": "^1.2.2",
+    "string-similarity": "^3.0.0",
     "word2vec": "^1.1.4"
   },
   "devDependencies": {

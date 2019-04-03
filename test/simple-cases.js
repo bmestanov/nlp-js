@@ -1,26 +1,10 @@
-const _ = require('lodash');
 const moment = require('moment');
 const { describe, it } = require('mocha');
-const { expect } = require('chai');
-const { parse } = require('../parser');
 const { enums } = require('../enums');
+const { check } = require('./lib');
 const sentenceTemplates = require('../templates');
 
 describe('simple cases', () => {
-  /**
-   * Helper function
-   * @param {string} sentence sentence to be tested
-   * @param {[any]} output desired output
-   * @param {{string: any}} parseArgs arguments forwarded to parser
-   */
-  const check = async (sentence, output, parseArgs) => {
-    const result = await parse({ sentence, ...parseArgs });
-    const omittedScore = _.map(result, template => _.omit(template, 'score'));
-    const intersect = _.intersectionWith(output, omittedScore, _.isEqual);
-    // eslint-disable-next-line no-unused-expressions
-    expect(intersect).to.not.be.empty;
-  };
-
   it('property is greater than int', async () => {
     await check('quantity is greater than 10', [{
       statement: enums.statements.gt,

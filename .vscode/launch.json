@@ -22,10 +22,11 @@
             "args": [
                 "-u",
                 "tdd",
+                "--exit",
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/test",
+                "${workspaceFolder}/test"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }
