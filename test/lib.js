@@ -7,7 +7,7 @@ const { parse } = require('../parser');
    * @param {string} sentence sentence to be tested
    * @param {[any]} output desired output
    * @param {{string: any}} parseArgs arguments forwarded to parser
-   * @param {bool} strict expect the output to be the best match
+   * @param {Boolean} strict expect the output to be the best match
    */
 const check = async (sentence, output, parseArgs, strict = true) => {
   const result = await parse({ sentence, ...parseArgs });
